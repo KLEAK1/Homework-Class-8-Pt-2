@@ -9,24 +9,21 @@ BlinkyLed::BlinkyLed(int _pin, int _blinkHighLenght, int _blinkLowLenght)
 
   blinkHighLength = _blinkHighLenght;
   blinkLowLength = _blinkLowLenght;
+
   lastBlink = 0;
   blinkState = LOW;
 }
 
 void BlinkyLed::updateLed()
 {
-  if (millis() >= lastBlink + blinkHighLength) {
-
-    Serial.println(lastBlink);
-
+  if (blinkState == LOW && millis() >= lastBlink + blinkLowLength) {
+    blinkState = HIGH;
     lastBlink = millis();
-
-    if (blinkState == LOW) {
-      blinkState = HIGH;
-    } else if (blinkState == HIGH) {
-      blinkState = LOW;
-    }
-
+    digitalWrite(pin, blinkState);
+  }
+  else if (blinkState == HIGH && millis() >= lastBlink + blinkHighLength) {
+    blinkState = LOW;
+    lastBlink = millis();
     digitalWrite(pin, blinkState);
   }
 }
